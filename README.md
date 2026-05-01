@@ -1,5 +1,3 @@
-# Aether-461
-High-performance Agent built with Cloudflare Agents SDK, D1, and Vectorize. Full logic implemented and verified
 # Aether: Autonomous Life-Sentinel & Web3 Alpha Agent
 
 Aether is a stateful, autonomous agent built on the **Cloudflare Agents SDK**. It is designed to manage complex life workflows including Computer Science academic tracking and Web3 economic automation.
