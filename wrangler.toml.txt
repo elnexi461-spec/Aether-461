@@ -1,0 +1,72 @@
+name = "aether-life-sentinel"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+#
+# ─── DURABLE OBJECTS ──────────────────────────────────────────────────────────
+# AetherAgent is the stateful core. One instance per user (keyed by user ID).
+#
+[[durable_objects.bindings]]
+name = "AETHER_AGENT"
+class_name = "AetherAgent"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["AetherAgent"]
+
+#
+# ─── D1 SQL DATABASE ──────────────────────────────────────────────────────────
+# Persistent logging for workouts, airdrop earnings, CS progress, and payments.
+# Run: npx wrangler d1 create aether-db  → paste the returned database_id below.
+#
+[[d1_databases]]
+binding = "DB"
+database_name = "aether-db"
+database_id = "YOUR_D1_DATABASE_ID"
+
+#
+# ─── VECTORIZE ────────────────────────────────────────────────────────────────
+# RAG knowledge base for CS lecture notes.
+# Run: npx wrangler vectorize create aether-knowledge --dimensions=1024 --metric=cosine
+#
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "aether-knowledge"
+
+#
+# ─── WORKERS AI ───────────────────────────────────────────────────────────────
+# Reasoning engine powered by Llama 3.1 70B (Inference API).
+#
+[ai]
+binding = "AI"
+
+#
+# ─── CLOUDFLARE BROWSER RENDERING ─────────────────────────────────────────────
+# Powers LinkedIn and Instagram intelligence scraping via headless Chromium.
+# Requires Cloudflare Browser Rendering to be enabled on your account.
+# Plan: Requires Workers Paid plan ($5/month).
+#
+[browser]
+binding = "BROWSER"
+
+#
+# ─── ENVIRONMENT VARIABLES ────────────────────────────────────────────────────
+# Non-secret configuration. Secrets (API keys, wallet keys) must be set via:
+#   npx wrangler secret put SECRET_NAME
+# Then provide values when prompted (they are encrypted at rest).
+#
+[vars]
+ENVIRONMENT = "production"
+
+# CDP and wallet addresses are non-sensitive identifiers (keys go via secrets).
+# USDC_RECEIVER_ADDRESS = "0x..."   # Set via: wrangler secret put USDC_RECEIVER_ADDRESS
+# WALLET_ADDRESS_BASE   = "0x..."   # Set via: wrangler secret put WALLET_ADDRESS_BASE
+# CDP_WALLET_ID         = "..."     # Set via: wrangler secret put CDP_WALLET_ID
+
+#
+# ─── LOCAL DEV OVERRIDES ──────────────────────────────────────────────────────
+#
+[dev]
+port = 8787
+local_protocol = "http"
